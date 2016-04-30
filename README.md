@@ -6,7 +6,7 @@
 ***
 <table sytle="border: 0px;">
 <tr>
-<td><img width="200px" src="https://github.com/corerzhang/VerticalDrawerLayout/raw/master/screenshot/showcase.gif" /></td>
+<td><img width="200px" src="https://github.com/corerzhang/ShowCaseView/raw/master/screenshot/showcase.gif" /></td>
 </tr>
 </table>
 
