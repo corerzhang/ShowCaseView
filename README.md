@@ -1,9 +1,7 @@
 # ShowCaseView
-***
 一个新手指引的View
 
 ##demo
-***
 <table sytle="border: 0px;">
 <tr>
 <td><img width="200px" src="https://github.com/corerzhang/ShowCaseView/raw/master/screenshot/showcase.gif" /></td>
@@ -26,7 +24,7 @@
 ```
 
 ## 支持拓展
-***
+
 ###拓展绘制高亮区域的样式
 >setShape(IShape shape)
 
