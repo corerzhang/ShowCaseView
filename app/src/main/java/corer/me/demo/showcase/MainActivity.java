@@ -24,7 +24,8 @@ public class MainActivity extends AppCompatActivity {
         final View guideViewOne = LayoutInflater.from(this).inflate(R.layout.showcase_content_one, null, false);
         final View targetOne = findViewById(R.id.target_one);
         final ShowCaseView showCaseViewOne = new ShowCaseView.Builder(MainActivity.this)
-                .setGuideView(guideViewOne)
+                .setLayoutController(new LayoutController(guideViewOne))
+                .setShape(new CircleShape(this))
                 .build(targetOne);
 
         guideViewOne.findViewById(R.id.show_case_button).setOnClickListener(new View.OnClickListener() {
@@ -43,12 +44,10 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        final View guideViewTwo = LayoutInflater.from(this).inflate(R.layout.showcase_content_two, null, false);
+        final View guideViewTwo = LayoutInflater.from(this).inflate(R.layout.showcase_content_one, null, false);
         final View targetTwo = findViewById(R.id.target_two);
-
-
         final ShowCaseView showCaseViewTwo = new ShowCaseView.Builder(MainActivity.this)
-                .setGuideView(guideViewTwo)
+                .setLayoutController(new LayoutController(guideViewTwo))
                 .setShape(new RectangleShape())
                 .build(targetTwo);
 

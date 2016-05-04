@@ -2,8 +2,10 @@ package corer.me.showcase.layout;
 
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
+import corer.me.showcase.ShowCaseView;
 import corer.me.showcase.shape.IShape;
 import corer.me.showcase.target.ITarget;
 
@@ -20,10 +22,24 @@ public class LayoutController implements ILayoutController {
     }
 
     @Override
-    public void layout(FrameLayout parent, ITarget target, IShape shape) {
+    public void addView(ShowCaseView showCaseView) {
+        if (showCaseView==null){
+            return;
+        }
+        if (mGuideView == null) {
+            return;
+        }
+        if (mGuideView.getParent() != null && mGuideView.getParent() instanceof ViewGroup) {
+            ((ViewGroup) mGuideView.getParent()).removeView(mGuideView);
+        }
+        showCaseView.addView(mGuideView, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+    }
+
+    @Override
+    public void layout(ShowCaseView showCaseView, ITarget target, IShape shape) {
 
 
-        int parentHeight = parent.getMeasuredHeight();
+        int parentHeight = showCaseView.getMeasuredHeight();
         int midPos = parentHeight / 2;
         int targetY = target.getPoint().y;
 
@@ -64,12 +80,5 @@ public class LayoutController implements ILayoutController {
             mGuideView.setLayoutParams(lp);
 
         }
-
-
-    }
-
-    @Override
-    public View getGuideView() {
-        return mGuideView;
     }
 }

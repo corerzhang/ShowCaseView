@@ -10,13 +10,12 @@
 
 ##使用
 ```java
-         View guideView = LayoutInflater.from(this).inflate(R.layout.showcase_content, null, false);
-         View target = findViewById(R.id.target);
-         ShowCaseView showCaseView = new ShowCaseView.Builder(this)
-                .setAnimationController(new AnimationController())
-                .setLayoutController(new LayoutController(guideView))
-                .setShape(new RectangleShape())
-                .build(target);
+         View guideView = LayoutInflater.from(this).inflate(R.layout.showcase_content_one, null, false);
+         View target = findViewById(R.id.target_one);
+         ShowCaseView showCaseView = new ShowCaseView.Builder(MainActivity.this)
+                        .setLayoutController(new LayoutController(guideView))
+                        .setShape(new CircleShape(this))
+                        .build(target);
         
         showCaseView.show(this);
         showCaseView.hide();

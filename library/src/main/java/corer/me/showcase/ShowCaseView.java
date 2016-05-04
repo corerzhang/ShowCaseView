@@ -38,7 +38,7 @@ public class ShowCaseView extends FrameLayout implements View.OnTouchListener {
 
     IShape mShape;
     ITarget mTarget;
-    ILayoutController mILayout;
+    ILayoutController mLayout;
     IAnimationController mAnimation;
 
     boolean shouldRender;
@@ -81,16 +81,6 @@ public class ShowCaseView extends FrameLayout implements View.OnTouchListener {
         getViewTreeObserver().addOnGlobalLayoutListener(mGlobalLayoutListener);
         mListener = new ArrayList<>();
     }
-
-
-    public void show(Activity activity) {
-        showInner(activity);
-    }
-
-    public void hide() {
-        hideInner();
-    }
-
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -141,8 +131,8 @@ public class ShowCaseView extends FrameLayout implements View.OnTouchListener {
             lp.bottomMargin = navHeight;
         }
 
-        if (mILayout != null && mShape != null && mTarget != null) {
-            mILayout.layout(ShowCaseView.this, mTarget, mShape);
+        if (mLayout != null && mShape != null && mTarget != null) {
+            mLayout.layout(ShowCaseView.this, mTarget, mShape);
         }
     }
 
@@ -154,54 +144,12 @@ public class ShowCaseView extends FrameLayout implements View.OnTouchListener {
     }
 
 
-    protected void notifyDisplayed() {
-        if (mListener != null) {
-            for (ShowCaseListener showCaseListener : mListener) {
-                showCaseListener.onShowCaseDisplayed(this);
-            }
-        }
+    public void show(Activity activity) {
+        showInner(activity);
     }
 
-    protected void notifyDismissed() {
-        if (mListener != null) {
-            for (ShowCaseListener showCaseListener : mListener) {
-                showCaseListener.onShowCaseDismissed(this);
-            }
-        }
-    }
-
-    protected void addShowCaseListener(ShowCaseListener listener) {
-        if (mListener != null) {
-            mListener.add(listener);
-        }
-    }
-
-    protected void clearListener() {
-        if (mListener != null) {
-            mListener.clear();
-        }
-    }
-
-
-    protected void setAnimationController(IAnimationController mAnimation) {
-        this.mAnimation = mAnimation;
-    }
-
-    protected void setLayoutController(ILayoutController layoutController) {
-        this.mILayout = layoutController;
-        View guideView = layoutController.getGuideView();
-        if (guideView.getParent() != null && guideView.getParent() instanceof ViewGroup) {
-            ((ViewGroup) guideView.getParent()).removeView(guideView);
-        }
-        addView(layoutController.getGuideView(), new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-    }
-
-    protected void setTarget(View target) {
-        this.mTarget = new ViewTarget(target);
-    }
-
-    protected void setShape(IShape mShape) {
-        this.mShape = mShape;
+    public void hide() {
+        hideInner();
     }
 
 
@@ -265,6 +213,45 @@ public class ShowCaseView extends FrameLayout implements View.OnTouchListener {
         }
     }
 
+
+
+
+
+
+    protected void setAnimationController(IAnimationController mAnimation) {
+        this.mAnimation = mAnimation;
+    }
+
+    protected void setLayoutController(ILayoutController layoutController) {
+        if (layoutController == null) {
+            return;
+        }
+        mLayout = layoutController;
+        mLayout.addView(this);
+    }
+
+    protected void setTarget(View target) {
+        this.mTarget = new ViewTarget(target);
+    }
+
+    protected void setShape(IShape mShape) {
+        this.mShape = mShape;
+    }
+
+
+    protected void addShowCaseListener(ShowCaseListener listener) {
+        if (mListener != null) {
+            mListener.add(listener);
+        }
+    }
+
+    protected void clearListener() {
+        if (mListener != null) {
+            mListener.clear();
+        }
+    }
+
+
     protected void removeFromWindow() {
 
         if (getParent() != null && getParent() instanceof ViewGroup) {
@@ -284,8 +271,23 @@ public class ShowCaseView extends FrameLayout implements View.OnTouchListener {
         }
     }
 
-    public static int getSoftButtonsBarSizePort(Activity activity) {
-        // getRealMetrics is only available with API 17 and +
+    protected void notifyDisplayed() {
+        if (mListener != null) {
+            for (ShowCaseListener showCaseListener : mListener) {
+                showCaseListener.onShowCaseDisplayed(this);
+            }
+        }
+    }
+
+    protected void notifyDismissed() {
+        if (mListener != null) {
+            for (ShowCaseListener showCaseListener : mListener) {
+                showCaseListener.onShowCaseDismissed(this);
+            }
+        }
+    }
+
+    protected  int getSoftButtonsBarSizePort(Activity activity) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             DisplayMetrics metrics = new DisplayMetrics();
             activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
@@ -303,7 +305,6 @@ public class ShowCaseView extends FrameLayout implements View.OnTouchListener {
 
     public static class Builder {
         ShowCaseView showCaseView;
-        View guideView;
         ILayoutController layoutController;
         IAnimationController animationController;
         IShape shape;
@@ -317,10 +318,6 @@ public class ShowCaseView extends FrameLayout implements View.OnTouchListener {
             return this;
         }
 
-        public Builder setGuideView(View guideView) {
-            this.guideView = guideView;
-            return this;
-        }
 
         public Builder setShape(IShape shape) {
             this.shape = shape;
@@ -339,18 +336,9 @@ public class ShowCaseView extends FrameLayout implements View.OnTouchListener {
 
         public ShowCaseView build(View targetView) {
 
-            if (layoutController == null && guideView != null) {
-                layoutController = new LayoutController(guideView);
-            }
-
             if (animationController == null) {
                 animationController = new AnimationController();
             }
-
-            if (shape == null) {
-                shape = new CircleShape();
-            }
-
 
             showCaseView.setLayoutController(layoutController);
             showCaseView.setAnimationController(animationController);
